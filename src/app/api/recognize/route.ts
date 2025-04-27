@@ -3,6 +3,15 @@ import { Car, CarApiPrediction } from '@/types';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if API URL is configured
+    if (!process.env.CAR_RECOGNITION_API_URL) {
+      console.error('CAR_RECOGNITION_API_URL environment variable is not set');
+      return NextResponse.json(
+        { success: false, error: 'Server configuration error: Car recognition API URL not configured' },
+        { status: 500 }
+      );
+    }
+
     const { imageUrl } = await request.json();
     
     if (!imageUrl) {

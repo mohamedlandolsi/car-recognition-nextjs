@@ -13,7 +13,8 @@ export const carRecognitionService = {
       const formData = new FormData();
       formData.append('image', file);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
+      // Use relative URL that works in both development and production
+      const response = await fetch(`/api/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -43,7 +44,8 @@ export const carRecognitionService = {
    */
   async recognizeCar(imageUrl: string): Promise<CarRecognitionResponse> {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recognize`, {
+      // Use relative URL that works in both development and production
+      const response = await fetch(`/api/recognize`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
