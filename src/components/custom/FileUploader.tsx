@@ -11,19 +11,101 @@ interface FileUploaderProps {
   maxSizeMB?: number;
 }
 
+// Function to compress image before upload
+const compressImage = async (file: File, maxSizeMB: number): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new window.Image();
+      img.src = event.target?.result as string;
+      
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // Start with a reasonable quality and dimensions
+        const quality = 0.7;
+        const MAX_WIDTH = 1200; // Reduced from 1920 to 1200
+        
+        // Scale down the image if it's too large
+        if (width > MAX_WIDTH) {
+          const ratio = MAX_WIDTH / width;
+          width = MAX_WIDTH;
+          height = height * ratio;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) {
+          reject(new Error('Could not get canvas context'));
+          return;
+        }
+        
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Try to create a compressed image with progressive quality reduction
+        const tryCompression = (attemptQuality: number, maxAttempts: number = 3, attempt: number = 1) => {
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Could not create blob'));
+                return;
+              }
+              
+              // Check if the blob size is within limit (with a buffer)
+              const blobSizeMB = blob.size / (1024 * 1024);
+              console.log(`Compression attempt ${attempt}, quality: ${attemptQuality.toFixed(2)}, size: ${blobSizeMB.toFixed(2)}MB`);
+              
+              // If the blob is too large and we haven't reached max attempts, try again with lower quality
+              if (blobSizeMB > (maxSizeMB * 0.9) && attempt < maxAttempts) {
+                // Reduce quality more aggressively for larger files
+                const nextQuality = attemptQuality * 0.7;
+                tryCompression(nextQuality, maxAttempts, attempt + 1);
+                return;
+              }
+              
+              const newFile = new File([blob], file.name, {
+                type: 'image/jpeg', // Always use JPEG for consistent compression
+                lastModified: Date.now(),
+              });
+              
+              console.log(`Original size: ${(file.size / (1024 * 1024)).toFixed(2)}MB, Compressed size: ${(newFile.size / (1024 * 1024)).toFixed(2)}MB, Compression ratio: ${(newFile.size / file.size * 100).toFixed(1)}%`);
+              resolve(newFile);
+            },
+            'image/jpeg',
+            attemptQuality
+          );
+        };
+        
+        // Start compression with initial quality
+        tryCompression(quality);
+      };
+      
+      img.onerror = () => {
+        reject(new Error('Error loading image'));
+      };
+    };
+    
+    reader.onerror = () => {
+      reject(new Error('Error reading file'));
+    };
+  });
+};
+
 export function FileUploader({
   onFileSelected,
   acceptedFileTypes = 'image/*',
-  maxSizeMB =
- 5
+  maxSizeMB = 5
 }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  
-  const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert MB to bytes
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -51,7 +133,7 @@ export function FileUploader({
     }
   };
   
-  const validateAndProcessFile = (file: File) => {
+  const validateAndProcessFile = async (file: File) => {
     setError(null);
     setIsUploading(true);
     
@@ -62,23 +144,44 @@ export function FileUploader({
       return;
     }
     
-    // Check file size
-    if (file.size > maxSizeBytes) {
-      setError(`File size exceeds the maximum limit of ${maxSizeMB}MB.`);
-      setIsUploading(false);
-      return;
+    // Check file size before attempting compression
+    const fileSizeMB = file.size / (1024 * 1024);
+    console.log(`Original file size: ${fileSizeMB.toFixed(2)}MB`);
+    
+    // If file is excessively large, warn the user it may take longer to process
+    if (fileSizeMB > 20) {
+      console.warn(`Very large image detected (${fileSizeMB.toFixed(2)}MB). Compression may take longer.`);
+      // Could optionally show a warning to the user here
     }
     
-    // Create preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      setPreviewUrl(reader.result as string);
+    try {
+      // Compress the image before uploading
+      const compressedFile = await compressImage(file, maxSizeMB);
+      
+      // Double-check the final size after compression
+      const finalSizeMB = compressedFile.size / (1024 * 1024);
+      if (finalSizeMB > maxSizeMB) {
+        console.warn(`Warning: Compressed image is still ${finalSizeMB.toFixed(2)}MB, which exceeds the ${maxSizeMB}MB limit.`);
+        setError(`Image is too large (${finalSizeMB.toFixed(1)}MB). Please try a smaller image or reduce its quality before uploading.`);
+        setIsUploading(false);
+        return;
+      }
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreviewUrl(reader.result as string);
+        setIsUploading(false);
+      };
+      reader.readAsDataURL(compressedFile);
+      
+      // Pass compressed file to parent component
+      onFileSelected(compressedFile);
+    } catch (error) {
+      console.error('Error compressing image:', error);
+      setError('Failed to process the image. Please try a different one.');
       setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
-    
-    // Pass file to parent component
-    onFileSelected(file);
+    }
   };
   
   const handleBrowseClick = () => {
@@ -92,6 +195,7 @@ export function FileUploader({
       // Trigger file input but in camera mode for mobile devices
       fileInputRef.current.setAttribute('capture', 'environment');
       fileInputRef.current.click();
+      
       // Remove capture attribute after click to make it work normally next time
       setTimeout(() => {
         if (fileInputRef.current) {
@@ -174,9 +278,11 @@ export function FileUploader({
         <div className="relative rounded-xl overflow-hidden shadow-sm border border-secondary-200 dark:border-secondary-700 bg-white dark:bg-secondary-950 group">
           <div className="relative h-64 w-full overflow-hidden">
             <Image
-              src={previewUrl}
+              src={previewUrl || ''}
               alt="Preview"
               fill
+              sizes="(max-width: 768px) 100vw, 600px"
+              priority={false}
               className="object-contain transition-transform duration-300 group-hover:scale-[1.02]"
             />
             {/* Image overlay with animation */}

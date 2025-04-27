@@ -35,11 +35,15 @@ export async function POST(request: NextRequest) {
     const sizeInMB = sizeInBytes / (1024 * 1024);
     console.log(`Image size (approx): ${sizeInMB.toFixed(2)} MB`);
 
-    // If image is too large, return an error
+    // If image is too large, return an error with a clear message
     if (sizeInMB > 10) {
+      console.warn(`Image too large for processing: ${sizeInMB.toFixed(2)} MB, exceeding 10MB limit`);
       return NextResponse.json(
-        { success: false, error: 'Image is too large. Please use an image smaller than 10MB.' },
-        { status: 400 }
+        { 
+          success: false, 
+          error: 'Image is too large. Please use an image smaller than 10MB or try the compression option.' 
+        },
+        { status: 413 } // Using proper 413 status code for clarity
       );
     }
 
