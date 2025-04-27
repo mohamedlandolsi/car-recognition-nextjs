@@ -36,8 +36,8 @@ export function CarResults({ cars }: CarResultsProps) {
               className={cn(
                 "overflow-hidden border-2 h-full transition-all duration-300",
                 isTopPrediction 
-                  ? "bg-gradient-to-br from-white to-secondary-50 dark:from-secondary-800/80 dark:to-secondary-900 border-primary/30 shadow-lg shadow-primary/5 dark:shadow-primary/10" 
-                  : "border-secondary-200 dark:border-secondary-800 hover:border-secondary-300 dark:hover:border-secondary-700"
+                  ? "bg-gradient-to-br from-white to-secondary-50 border-primary/30 shadow-lg shadow-primary/5" 
+                  : "border-secondary-200 hover:border-secondary-300"
               )}
             >
               {isTopPrediction && (
@@ -52,16 +52,16 @@ export function CarResults({ cars }: CarResultsProps) {
                 isTopPrediction && "pt-4"
               )}>
                 <div className="flex justify-between items-center mb-1">
-                  <CardTitle className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-secondary-50">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-secondary-900">
                     {car.make}
                   </CardTitle>
                   {car.year && (
-                    <span className="text-sm font-medium bg-secondary-100 text-secondary-700 dark:text-secondary-200 dark:bg-secondary-800 px-2.5 py-1 rounded-full border border-secondary-200 dark:border-secondary-700">
+                    <span className="text-sm font-medium bg-secondary-100 text-secondary-700 px-2.5 py-1 rounded-full border border-secondary-200">
                       {car.year}
                     </span>
                   )}
                 </div>
-                <CardDescription className="text-base sm:text-lg font-medium text-secondary-800 dark:text-secondary-200">
+                <CardDescription className="text-base sm:text-lg font-medium text-secondary-800">
                   {car.model}
                 </CardDescription>
               </CardHeader>
@@ -69,12 +69,12 @@ export function CarResults({ cars }: CarResultsProps) {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-secondary-600 dark:text-secondary-400">Match Confidence</span>
+                    <span className="text-sm text-secondary-600">Match Confidence</span>
                     <span className="text-sm font-bold" style={{ color: confidenceColor }}>
                       {confidencePercent}%
                     </span>
                   </div>
-                  <div className="h-3 relative bg-secondary-100 dark:bg-secondary-800 rounded-full overflow-hidden shadow-inner">
+                  <div className="h-3 relative bg-secondary-100 rounded-full overflow-hidden shadow-inner">
                     <div 
                       className="absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out"
                       style={{ 
@@ -93,7 +93,7 @@ export function CarResults({ cars }: CarResultsProps) {
                   {getCarTags(car).map((tag, i) => (
                     <span 
                       key={i} 
-                      className="inline-flex items-center text-xs px-2.5 py-1 rounded-full bg-secondary-100/80 text-secondary-700 dark:bg-secondary-800/50 dark:text-secondary-300 border border-secondary-200 dark:border-secondary-700/50"
+                      className="inline-flex items-center text-xs px-2.5 py-1 rounded-full bg-secondary-100/80 text-secondary-700 border border-secondary-200"
                     >
                       {tag}
                     </span>
@@ -102,10 +102,10 @@ export function CarResults({ cars }: CarResultsProps) {
               </CardContent>
               
               {isTopPrediction && (
-                <CardFooter className="pt-1 pb-4 px-6 border-t border-secondary-100 dark:border-secondary-800 bg-secondary-50/50 dark:bg-secondary-900/50">
+                <CardFooter className="pt-1 pb-4 px-6 border-t border-secondary-100 bg-secondary-50/50">
                   <div className="w-full">
-                    <ul className="grid grid-cols-3 gap-3 text-sm text-secondary-600 dark:text-secondary-400">
-                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+                    <ul className="grid grid-cols-3 gap-3 text-sm text-secondary-600">
+                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-secondary-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1 text-primary">
                           <path d="M8 17a5 5 0 0 1 0-10h8a5 5 0 0 1 0 10h-8Z" />
                           <path d="M8 7H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3" />
@@ -115,7 +115,7 @@ export function CarResults({ cars }: CarResultsProps) {
                         </svg>
                         <span className="font-medium">{getCategoryForCar(car)}</span>
                       </li>
-                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-secondary-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1 text-primary">
                           <circle cx="18.5" cy="17.5" r="3.5" />
                           <circle cx="5.5" cy="17.5" r="3.5" />
@@ -126,7 +126,7 @@ export function CarResults({ cars }: CarResultsProps) {
                         </svg>
                         <span className="font-medium">Auto</span>
                       </li>
-                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
+                      <li className="flex flex-col items-center justify-center p-2 rounded-lg bg-white border border-secondary-200">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-1 text-primary">
                           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                           <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

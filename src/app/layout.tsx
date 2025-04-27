@@ -1,7 +1,6 @@
 import './globals.css';
 import { Inter, Montserrat, JetBrains_Mono } from 'next/font/google';
 import { Toaster } from 'sonner';
-import { ThemeProvider } from "@/components/theme-provider";
 
 // Load Fonts
 const inter = Inter({ 
@@ -33,17 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={`${inter.variable} ${montserrat.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster position="top-center" />
-        </ThemeProvider>
+        {children}
+        <Toaster position="top-center" />
       </body>
     </html>
   );

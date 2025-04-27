@@ -43,14 +43,9 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-secondary-50 to-secondary-100 dark:from-secondary-900 dark:to-secondary-950">
-      {/* Theme Toggle - Fixed Position */}
-      {/* <div className="fixed top-4 right-4 z-50">
-        <ModeToggle />
-      </div> */}
-      
+    <main className="min-h-screen bg-gradient-to-b from-secondary-50 to-secondary-100">
       {/* Hero Section with Background */}
-      <div className="relative w-full bg-gradient-to-br from-secondary-800 to-secondary-900 dark:from-secondary-900 dark:to-black overflow-hidden">
+      <div className="relative w-full bg-gradient-to-br from-secondary-800 to-secondary-900 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/car-pattern.svg')] bg-repeat opacity-10"></div>
         <div className="container relative mx-auto px-4 py-10 sm:py-16 md:py-20 max-w-7xl">
           <header className="text-center max-w-3xl mx-auto">
@@ -79,9 +74,9 @@ export default function Home() {
           {/* Left Section (Upload) - Takes 3/5 on larger screens */}
           <div className="md:col-span-3 space-y-6">
             {/* Upload Card */}
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-md overflow-hidden transition-all duration-300">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300">
               <div className="p-5 sm:p-6">
-                <h2 className="text-xl md:text-2xl font-heading font-semibold text-secondary-900 dark:text-white mb-5 flex items-center">
+                <h2 className="text-xl md:text-2xl font-heading font-semibold text-secondary-900 mb-5 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
@@ -123,7 +118,7 @@ export default function Home() {
             
             {/* Error message */}
             {error && (
-              <div className="animate-fadeIn bg-white dark:bg-secondary-800 border-l-4 border-error rounded-r-xl p-4 shadow-md">
+              <div className="animate-fadeIn bg-white border-l-4 border-error rounded-r-xl p-4 shadow-md">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
                     <svg className="h-5 w-5 text-error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -132,11 +127,11 @@ export default function Home() {
                   </div>
                   <div className="ml-3">
                     <h3 className="text-sm font-medium text-error">Recognition Failed</h3>
-                    <div className="mt-2 text-sm text-secondary-700 dark:text-secondary-300">
+                    <div className="mt-2 text-sm text-secondary-700">
                       <p>{error}</p>
                     </div>
                     <div className="mt-3">
-                      <div className="text-xs text-secondary-500 dark:text-secondary-400">
+                      <div className="text-xs text-secondary-500">
                         Make sure you&apos;ve uploaded a clear image of a car. If the problem persists, try a different image.
                       </div>
                     </div>
@@ -146,14 +141,14 @@ export default function Home() {
             )}
             
             {/* Help section */}
-            <div className="bg-white dark:bg-secondary-800 rounded-xl shadow-md overflow-hidden p-5 sm:p-6">
-              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-4 flex items-center">
+            <div className="bg-white rounded-xl shadow-md overflow-hidden p-5 sm:p-6">
+              <h3 className="text-lg font-medium text-secondary-900 mb-4 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m-1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Tips for Best Results
               </h3>
-              <ul className="space-y-3 text-secondary-700 dark:text-secondary-300 text-sm">
+              <ul className="space-y-3 text-secondary-700 text-sm">
                 <li className="flex items-start">
                   <svg className="h-5 w-5 text-accent mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -186,12 +181,12 @@ export default function Home() {
           <div className="md:col-span-2">
             {/* Results Card */}
             <div className={cn(
-              "bg-white dark:bg-secondary-800 rounded-xl shadow-md h-full overflow-hidden transition-all duration-500",
+              "bg-white rounded-xl shadow-md h-full overflow-hidden transition-all duration-500",
               (imageUrl && recognizedCars.length > 0) ? "opacity-100" : "opacity-70",
               isAnimating && "animate-pulse-once"
             )}>
               <div className="p-5 sm:p-6 h-full flex flex-col">
-                <h2 className="text-xl md:text-2xl font-heading font-semibold text-secondary-900 dark:text-white mb-5 flex items-center">
+                <h2 className="text-xl md:text-2xl font-heading font-semibold text-secondary-900 mb-5 flex items-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
@@ -201,7 +196,7 @@ export default function Home() {
                 {imageUrl && recognizedCars.length > 0 ? (
                   <div className="space-y-5 flex-1 flex flex-col">
                     {/* Image preview */}
-                    <div className="relative h-48 sm:h-56 w-full overflow-hidden rounded-lg border border-secondary-200 dark:border-secondary-700 bg-secondary-50 dark:bg-secondary-900">
+                    <div className="relative h-48 sm:h-56 w-full overflow-hidden rounded-lg border border-secondary-200 bg-secondary-50">
                       <Image 
                         src={imageUrl} 
                         alt="Uploaded car image" 
@@ -229,13 +224,13 @@ export default function Home() {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center flex-1 py-10 text-center">
-                    <div className="bg-secondary-100 dark:bg-secondary-700/30 rounded-full p-4 mb-4">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-secondary-500 dark:text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="bg-secondary-100 rounded-full p-4 mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-secondary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-medium text-secondary-900 dark:text-secondary-100 mb-2">No Results Yet</h3>
-                    <p className="text-secondary-500 dark:text-secondary-400 max-w-sm">
+                    <h3 className="text-lg font-medium text-secondary-900 mb-2">No Results Yet</h3>
+                    <p className="text-secondary-500 max-w-sm">
                       Upload a car image and click &quot;Recognize Car&quot; to see AI-powered identification results here
                     </p>
                   </div>
@@ -246,7 +241,7 @@ export default function Home() {
         </div>
         
         {/* Footer */}
-        <footer className="mt-12 pt-6 border-t border-secondary-200 dark:border-secondary-700/30 text-center text-secondary-500 dark:text-secondary-400 text-sm">
+        <footer className="mt-12 pt-6 border-t border-secondary-200 text-center text-secondary-500 text-sm">
           <p>© {new Date().getFullYear()} Car Recognition App. All rights reserved.</p>
           <p className="mt-1 text-xs">Made By Mohamed Landolsi &amp; Adem Mami as a deep learning mini project.</p>
         </footer>
